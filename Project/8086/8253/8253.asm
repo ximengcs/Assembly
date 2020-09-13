@@ -1,0 +1,36 @@
+;8253 端口
+CTR EQU 2EH
+COUNT0 EQU 28H
+COUNT1 EQU 2AH
+COUNT2 EQU 2CH
+
+CODE SEGMENT
+     ASSUME CS:CODE
+START:  
+org 100H
+	
+	MOV DX,CTR 	;控制寄存器端口 00101 110
+	MOV AL,10H	;00010000: 00计数器0,01只读写计数器低8位,000方式0
+	OUT DX,AL
+	
+	MOV AL,56H	;01010110: 01计数器1,01只读写计数器低8位,011方式3(方波)
+	OUT DX,AL
+
+	MOV AL,0B4H	;10110100: 10计数器2,11先写计数器低8位,后写高8位,010方式2,
+	OUT DX,AL
+		
+	MOV DX,COUNT0	;计数器0端口
+	MOV AL,0C8H		;1/2Mhz = 0.5us, 计数初值=100us/0.5us=200
+	OUT DX,AL
+	
+	MOV DX,COUNT1	;计数器1端口
+	MOV AL,20		;1/2MHz = 0.5us,计数初值=10/0.5=20
+	OUT DX,AL
+	
+	MOV DX,COUNT2	;计数器2端口
+	MOV AL,2000		;1/2MHz = 0.5us,计数初值=1ms/0.5us = 2000
+	OUT DX,AL
+	
+CODE ENDS
+
+END START   

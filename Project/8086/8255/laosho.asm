@@ -1,0 +1,41 @@
+MYDATA		SEGMENT
+P8255A			DW		0640H		;8255的PA口地址
+P8255B			DW		0642H		;8255的PB口地址
+P8255C			DW		0644H		;8255的PC口地址
+P8255M			DW		0646H		;8255的控制字口地址
+MYDATA		ENDS
+SSTACK 		SEGMENT	 STACK 
+DW 32 DUP(?) 
+SSTACK		ENDS
+;代码段的定义
+MYCODE	SEGMENT
+    	ASSUME		CS:MYCODE, SS:SSTACK,DS:MYDATA
+START: MOV		AX,	MYDATA
+       MOV		DS,	AX			
+       MOV		DX,	P8255M	
+		MOV		AL,	控制字
+		OUT		DX,	AL
+		
+MOV 		BX, 0180H 
+AA1: 	MOV 		DX, P8255A 
+MOV 		AL, BL
+OUT 			DX, AL 	
+ROR 		BL, 1
+
+CALL 		DELAY
+JMP 		AA1
+;-------------------------------------延时子程序-------------------
+DELAY		PROC
+		PUSH		SI
+		PUSH		CX
+		MOV		SI,	13FFH
+  D11:	MOV		CX,	9000H
+  D22:	LOOP		D22
+		DEC		SI
+		JNZ			D11					;延时结束
+		POP		CX
+		POP		SI
+		RET
+DELAY	    ENDP
+MYCODE	ENDS
+			END	START

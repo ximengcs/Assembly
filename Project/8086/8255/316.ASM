@@ -1,0 +1,23 @@
+HOLI EQU 10000001	;C口低4位输入，高4位输出
+HILO EQU 10001000	;C口低4位输出，高4位输入
+
+A EQU 20H      ;A口
+B EQU 22H      ;B口
+C EQU 24H      ;C口
+CTR EQU 26H    ;控制口
+
+CODE SEGMENT
+ASSUME CS:CODE
+START:
+ORG 0100H
+	MOV AL,HOLI
+	OUT CTR,AL		;写入状态字
+	
+	MOV AL,0
+	OUT C,AL		;输出0
+	
+	IN AL,C			;读入各列
+	
+	
+CODE ENDS
+END START
